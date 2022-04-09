@@ -6,7 +6,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\String\u;
 class VinylController extends AbstractController
 {
-    #[Route('/')]
+    #[Route('/', name: 'app_homepage')]
     public function homepage(): Response
     {
         $tracks = [
@@ -17,20 +17,20 @@ class VinylController extends AbstractController
             ['song' => 'On Bended Knee', 'artist' => 'Boyz II Men'],
             ['song' => 'Fantasy', 'artist' => 'Mariah Carey'],
         ];
-        return $this->render('vinyl/homepage.html.twig', [
+        return  $this->render('vinyl/homepage.html.twig', [
             'title' => 'PB & Jams',
             'tracks' => $tracks,
         ]);
+
     }
-    #[Route('/browse/{slug}')]
+    #[Route('/browse/{slug}', name: 'app_browse')]
     public function browse(string $slug = null): Response
     {
-        if ($slug) {
-            $title = 'Genre: '.u(str_replace('-', ' ', $slug))->title(true);
-        } else {
-            $title = 'All Genres';
-        }
-        return new Response($title);
+
+        $genre = $slug ? u(str_replace('-', ' ', $slug))->title(true) : null;
+        return $this->render('vinyl/browse.html.twig',[
+            'genre' => $genre,
+        ]);
         //return new Response('Breakup vinyl? Angsty 90s rock? Browse the collection!');
     }
 }
